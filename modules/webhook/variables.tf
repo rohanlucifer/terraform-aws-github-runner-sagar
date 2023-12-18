@@ -35,7 +35,9 @@ variable "runner_config" {
     })
   }))
   validation {
-    condition     = try(var.runner_config.matcherConfig.priority, 999) >= 0 && try(var.runner_config.matcherConfig.priority, 999) < 1000
+    condition     = can(var.runner_config[aws_sqs_queue.queued_builds.id].matcherConfig.priority) &&
+                var.runner_config[aws_sqs_queue.queued_builds.id].matcherConfig.priority >= 0 &&
+                var.runner_config[aws_sqs_queue.queued_builds.id].matcherConfig.priority < 1000
     error_message = "The priority of the matcher must be between 0 and 999."
   }
 }
